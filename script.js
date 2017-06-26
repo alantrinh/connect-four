@@ -23,7 +23,7 @@ $(document).ready(function() {
         $("#turn-indicator p").html(currentColor.toUpperCase() + "'S TURN").css({color: currentColor});
     }
 
-    $(".col").on("click", function() {
+    $(".col").on("click", function() {//listen for clicks on a column
         if(animationComplete) {
             for (var i = 0; i < 7; i++) {
                 var colClassLoop = "c" + i; //check class to see which column was clicked
@@ -38,19 +38,12 @@ $(document).ready(function() {
         }
     });
 
-    function checkForWinner() {
+    function checkForWinner() {//game logic
         for (var x = 0; x < board.length; x++) {
             for (var y = 0; y < board[x].length; y++) {
-                // console.log("x: " + x);
-                // console.log("y: " + y);
-                // console.log("y length: " + board[x].length);
-                // console.log("y + 3 < board[x].length: " + ((y + 3) < board[x].length));
-                // console.log(" " + x + ", 0: " + board[x][0] + " " + x + ", 1: " + board[x][1] + " " + x + ", 2: " + board[x][2] + " " + x + ", 3: " + board[x][3] + " " + x + ", 4: "  + board[x][4] + " " + x + ", 5: "  + board[x][5]);
                 if (!gameOver && x + 3 < board.length && board[x][y] == currentColor && board[x+1][y] == currentColor && board[x+2][y] == currentColor && board[x+3][y] == currentColor) { //check horizontal
-                    // console.log($(".c" + x + " r" + y));
                     for (var i = x; i < board.length; i++) {
                         if (board[i][y] == currentColor){
-                            // console.log(".c" + i + " .r" + y);
                             $(".c" + i + " .r" + y).addClass("blink-me");
                         }
                     }
@@ -81,22 +74,20 @@ $(document).ready(function() {
         }
     }
 
-    function displayModal() {
+    function displayModal() { //display modal on game over
         gameOver = true;
         $(".modal-content p, #turn-indicator p").html(currentColor.toUpperCase() + " WINS!!!").css({color: currentColor});
         $(".modal").css({display: "inline"});
         blink();
     }
 
-    function blink() {
-        // console.log("blink function called");
+    function blink() { //blink winning chip sequence
         blinker = setInterval(function() {
-            // console.log("blink interval called");
             $(".blink-me").fadeOut(100).fadeIn(100);
         }, 250);
     }
 
-    $("#moving-chip").on("transitionend", function() {
+    $("#moving-chip").on("transitionend", function() { //check for winner once chip falling animation is complete, otherwise indicate next turn
         $("#moving-chip").css({visibility: "hidden", transition: "0s", top: "-87px"});
         $("." + colClass + " " + rowClass).addClass(currentColor);
         animationComplete = true;
@@ -110,7 +101,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".modal-close").on("click", function fn() {
+    $(".modal-close").on("click", function fn() { //restart game when winner modal closed
         clearInterval(blinker);
         $(".modal").css({display: "none"});
         $(".row").removeClass("red yellow blink-me");
